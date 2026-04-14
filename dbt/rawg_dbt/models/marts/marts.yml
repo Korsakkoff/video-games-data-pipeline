@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: games_by_year
+    description: "Número de juegos lanzados por año"
+
+  - name: games_by_genre
+    description: "Número de juegos por género"
+
+  - name: genre_avg_rating
+    description: "Rating medio por género junto al número de juegos"
+
+  - name: genre_popularity
+    description: "Popularidad por género usando la métrica added"
+
+  - name: genre_platform_distribution
+    description: "Número de juegos por combinación género-plataforma"

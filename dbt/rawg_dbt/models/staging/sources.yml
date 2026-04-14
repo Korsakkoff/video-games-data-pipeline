@@ -1,0 +1,13 @@
+
+version: 2
+
+sources:
+  - name: rawg_raw
+    database: video-games-rawg-data
+    schema: rawg_games
+    tables:
+      - name: games
+      - name: genres
+      - name: platforms
+      - name: game_genre
+      - name: game_platform

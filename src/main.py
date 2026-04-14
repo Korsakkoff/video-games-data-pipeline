@@ -3,12 +3,18 @@ from pathlib import Path
 import pandas as pd
 
 from src.extract.read_rawg_games import read_raw_games
+
 from src.transform.games import build_games_df
 from src.transform.genres import build_genres_df
 from src.transform.platforms import build_platforms_df
 from src.transform.game_genre import build_game_genre_df
 from src.transform.game_platform import build_game_platform_df
+
+from src.load.load_to_bigquery import load_parquet_to_bigquery
+from src.load.load_pipeline import load_all_tables
+
 from src.utils.paths import get_project_root
+from src.utils.gcp import setup_gcp_credentials, get_gcp_config
 
 
 def validate_not_empty(df: pd.DataFrame, name: str) -> None:
@@ -54,6 +60,7 @@ def main() -> None:
     print(f"Raw directory: {raw_dir}")
     print(f"Output directory: {output_dir}")
 
+    #extract
     raw_games = read_raw_games(raw_dir)
 
     if not raw_games:
@@ -61,6 +68,7 @@ def main() -> None:
 
     print(f"Raw games loaded: {len(raw_games)}")
 
+    #transform
     games_df = build_games_df(raw_games)
     genres_df = build_genres_df(raw_games)
     platforms_df = build_platforms_df(raw_games)
@@ -79,6 +87,7 @@ def main() -> None:
     validate_unique(game_genre_df, ["game_id", "genre_id"], "game_genre")
     validate_unique(game_platform_df, ["game_id", "platform_id"], "game_platform")
 
+    #save
     save_parquet(games_df, output_dir / "games.parquet", "games")
     save_parquet(genres_df, output_dir / "genres.parquet", "genres")
     save_parquet(platforms_df, output_dir / "platforms.parquet", "platforms")
@@ -95,6 +104,10 @@ def main() -> None:
         f"game_platform={len(game_platform_df)}"
     )
 
+    project_id, dataset = get_gcp_config()
+    load_all_tables(project_id, dataset)
+
 
 if __name__ == "__main__":
+    setup_gcp_credentials()
     main()

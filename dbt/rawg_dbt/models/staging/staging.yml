@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: stg_games
+    columns:
+      - name: game_id
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_genres
+    columns:
+      - name: genre_id
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_platforms
+    columns:
+      - name: platform_id
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_game_genre
+    columns:
+      - name: game_id
+        tests:
+          - not_null
+      - name: genre_id
+        tests:
+          - not_null
+
+  - name: stg_game_platform
+    columns:
+      - name: game_id
+        tests:
+          - not_null
+      - name: platform_id
+        tests:
+          - not_null

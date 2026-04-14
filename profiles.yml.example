@@ -1,0 +1,9 @@
+rawg_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      project: your_project
+      dataset: your_dataset
+      keyfile: /path/to/key.json

@@ -11,6 +11,9 @@ def build_games_df(raw_games: list[dict]) -> pd.DataFrame:
                 "released": game.get("released"),
                 "rating": game.get("rating"),
                 "ratings_count": game.get("ratings_count"),
+                "added": game.get("added"),
+                "playtime": game.get("playtime"),
+                "metacritic": game.get("metacritic"),
             }
         )
 

@@ -4,10 +4,6 @@
 import json
 from pathlib import Path
 
-import json
-from pathlib import Path
-
-
 def read_raw_games(raw_dir: Path) -> list[dict]:
     json_files = sorted(raw_dir.glob("*.json"))
 

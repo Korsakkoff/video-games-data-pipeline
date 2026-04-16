@@ -6,11 +6,17 @@ import requests
 from dotenv import load_dotenv
 
 # Parameters for API request
-START_DATE = "2024-01-01"
-END_DATE = "2024-12-31"
+START_DATE = os.getenv("START_DATE")
+END_DATE = os.getenv("END_DATE")
 PAGE_SIZE = 40
-MAX_PAGES = 10
+MAX_PAGES = 2
 ORDERING = "-added"
+
+if not START_DATE:
+    raise ValueError("START_DATE not found in environment variables")
+
+if not END_DATE:
+    raise ValueError("END_DATE not found in environment variables")
 
 # Cleaned date strings for file naming
 START_DATE_CLEAN = START_DATE.replace("-", "")

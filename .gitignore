@@ -213,3 +213,4 @@ data/raw/*
 data/processed/*
 backup/
 credentials/
+.env.kestra

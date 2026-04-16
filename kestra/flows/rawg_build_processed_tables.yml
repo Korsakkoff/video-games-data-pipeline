@@ -1,0 +1,25 @@
+id: rawg_build_processed_tables
+namespace: video_games
+
+inputs:
+  - id: year
+    type: INT
+
+tasks:
+  - id: process
+    type: io.kestra.plugin.scripts.shell.Commands
+    containerImage: rawg-pipeline:latest
+    taskRunner:
+      type: io.kestra.plugin.scripts.runner.docker.Docker
+      volumes:
+        - /home/didac/VSCode/video-games-data-pipeline:/app/project
+        - /home/didac/VSCode/video-games-data-pipeline/credentials:/app/credentials
+    env: 
+      YEAR: "{{ inputs.year }}"
+      RAWG_API_KEY: "{{ envs.rawg_api_key }}" 
+      GCS_BUCKET: "{{ envs.gcs_bucket }}" 
+      GCS_RAW_PREFIX: "{{ envs.gcs_raw_prefix }}" 
+      GOOGLE_APPLICATION_CREDENTIALS: "{{ envs.google_application_credentials }}"
+    commands: 
+      - cd /app/project 
+      - python -m src.process.process_rawg_to_parquet_gcs

@@ -13,6 +13,9 @@ inputs:
       - 2024
       - 2025
     required: true
+  - id: max_pages
+    type: INT
+    defaults: 2
 
 tasks:
   - id: extract
@@ -23,6 +26,7 @@ tasks:
     transmitFailed: true
     inputs:
       year: "{{ inputs.year }}"
+      max_pages: "{{ inputs.max_pages }}"
 
   - id: process
     type: io.kestra.plugin.core.flow.Subflow

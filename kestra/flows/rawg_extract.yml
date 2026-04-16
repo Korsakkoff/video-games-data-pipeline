@@ -6,7 +6,6 @@ inputs:
     type: INT
   - id: max_pages
     type: INT
-    defaults: 2
 
 tasks:
   - id: run_extract

@@ -1,5 +1,5 @@
 id: rawg_pipeline
-namespace: company.team
+namespace: video_games
 
 inputs:
   - id: year

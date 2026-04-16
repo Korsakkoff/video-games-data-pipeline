@@ -18,15 +18,8 @@ tasks:
       YEAR: "{{ inputs.year }}"
       GCS_BUCKET: "{{ envs.gcs_bucket }}" 
       GCS_RAW_PREFIX: "{{ envs.gcs_raw_prefix }}" 
+      GCS_PROCESSED_PREFIX: "{{ envs.gcs_processed_prefix }}"
       GOOGLE_APPLICATION_CREDENTIALS: "{{ envs.google_application_credentials }}"
     commands: 
       - cd /app/project 
       - python -m src.process.process_rawg_games_to_parquet
-#     
-#  - id: rawg_load
-#    type: io.kestra.plugin.core.flow.Subflow
-#    namespace: video_games
-#    flowId: rawg_load_to_bigquery
-#    wait: true
-#    inputs:
-#      year: "{{ inputs.year }}"

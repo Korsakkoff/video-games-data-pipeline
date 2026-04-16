@@ -3,15 +3,7 @@ namespace: video_games
 
 inputs:
   - id: year
-    type: SELECT
-    defaults: 2020
-    values:
-      - 2020
-      - 2021
-      - 2022
-      - 2023
-      - 2024
-      - 2025
+    type: INT
   - id: max_pages
     type: INT
     defaults: 2
@@ -32,15 +24,6 @@ tasks:
       RAWG_API_KEY: "{{ envs.rawg_api_key }}"
       GCS_BUCKET: "{{ envs.gcs_bucket }}"
       GCS_RAW_PREFIX: "{{ envs.gcs_raw_prefix }}"
-      GOOGLE_APPLICATION_CREDENTIALS: "{{ envs.google_application_credentials }}"
     commands:
       - cd /app/project
       - python -m src.extract.extract_rawg_games_to_gcs
-#
-#  - id: rawg_process
-#    type: io.kestra.plugin.core.flow.Subflow
-#    namespace: video_games
-#    flowId: rawg_build_processed_tables
-#    wait: true
-#    inputs:
-#      year: "{{ inputs.year }}"

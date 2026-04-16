@@ -4,7 +4,7 @@ version: 2
 sources:
   - name: rawg_raw
     database: video-games-rawg-data
-    schema: rawg_games
+    schema: rawg_raw
     tables:
       - name: games
       - name: genres

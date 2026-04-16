@@ -159,6 +159,38 @@ RAWG API
 └── .env.example        # Required environment variables
 ```
 
+## Design Decisions and Trade-offs
+
+This project was designed to demonstrate a complete modern data workflow with a strong focus on clarity, modularity, and end-to-end integration.
+
+Main design choices:
+
+- Use Kestra as the orchestrator to separate extraction, processing, loading, and analytics into independent subflows.
+- Use GCS as an intermediate storage layer for both raw JSON files and processed Parquet files.
+- Use BigQuery as the warehouse layer for structured raw data and dbt-ready sources.
+- Use dbt to keep the analytical layer declarative, testable, and easy to extend.
+
+Trade-offs taken for this project:
+
+- The pipeline prioritizes readability and simplicity over full production-grade reproducibility.
+- Raw files are partitioned by year, which makes the dataset easy to inspect and debug.
+- If the same year is reprocessed with a different `max_pages`, older raw files may still remain in GCS unless they are explicitly cleaned first.
+- For an academic project, this trade-off keeps the implementation straightforward while still demonstrating the full ETL and ELT lifecycle.
+
+Why this approach is valid:
+
+- It shows integration with a real external API.
+- It includes cloud storage and warehouse layers.
+- It separates operational processing from analytical modeling.
+- It reflects a realistic modern data stack using Kestra, GCS, BigQuery, and dbt.
+
+Possible future improvements:
+
+- Version raw data by execution instead of only by year.
+- Add stronger data quality checks before loading into BigQuery.
+- Propagate more runtime parameters through the main Kestra flow.
+- Extend the Terraform setup to cover more of the infrastructure lifecycle.
+
 ## Notes
 
 - The pipeline is structured like a layered analytics workflow: raw ingestion, processed storage, warehouse loading, and semantic modeling.

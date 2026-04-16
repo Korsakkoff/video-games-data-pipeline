@@ -216,3 +216,8 @@ credentials/
 .env.kestra
 .codex
 .env
+
+#terraform
+terraform/.terraform/
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup

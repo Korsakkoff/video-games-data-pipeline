@@ -9,6 +9,14 @@ from google.cloud import storage
 
 load_dotenv()
 
+def parse_optional_int(value: str | None) -> int | None:
+    if value is None:
+        return None
+    value = value.strip()
+    if value == "" or value.lower() in {"null", "none"}:
+        return None
+    return int(value)
+
 # Environment variables and configuration
 # GCP CREDENTIALS and CONFIG
 API_KEY = os.getenv("RAWG_API_KEY")
@@ -18,7 +26,7 @@ GCS_RAW_PREFIX = os.getenv("GCS_RAW_PREFIX")
 START_DATE = os.getenv("START_DATE")
 END_DATE = os.getenv("END_DATE")
 PAGE_SIZE = 40
-MAX_PAGES = int(os.getenv("MAX_PAGES", "2"))
+MAX_PAGES = parse_optional_int(os.getenv("MAX_PAGES"))
 ORDERING = "-added"
 
 
@@ -37,6 +45,7 @@ if not START_DATE:
 if not END_DATE:
     raise ValueError("END_DATE not found in environment variables")
 
+print(f"MAX_PAGES parsed: {MAX_PAGES}")
 
 
 start_year = START_DATE[:4]
@@ -69,13 +78,21 @@ pages_processed = 0
 page = 1
 total_results = None
 total_pages = None
+requests_count = 0
 
 YEAR = START_DATE[:4]
 
-while url and pages_processed < MAX_PAGES:
+while url:
+    if MAX_PAGES is not None and pages_processed >= MAX_PAGES:
+        break
+    
     response = requests.get(url, params=params, timeout=30)
-    response.raise_for_status()
 
+    if response.status_code == 404:
+        print(f"Reached last available page at page={page}. RAWG returned 404.")
+        break
+
+    response.raise_for_status()
     data = response.json()
 
     if total_results is None:
@@ -102,9 +119,11 @@ while url and pages_processed < MAX_PAGES:
     print(f"Results returned: {len(data.get('results', []))}")
     print(f"Uploaded to: gs://{GCS_BUCKET}/{blob_name}")
 
+    requests_count += 1
     url = data.get("next")
     params = None
     page += 1
-    
+
+print(f"Total API calls: {requests_count}")
 print(f"Total games processed: {total_games}")
 print(f"Pages processed: {pages_processed}")

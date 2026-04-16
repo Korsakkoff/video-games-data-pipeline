@@ -5,7 +5,8 @@ inputs:
   - id: year
     type: INT
   - id: max_pages
-    type: INT
+    type: STRING
+    required: false
 
 tasks:
   - id: run_extract
@@ -19,7 +20,7 @@ tasks:
     env:
       START_DATE: "{{ inputs.year }}-01-01"
       END_DATE: "{{ inputs.year }}-12-31"
-      MAX_PAGES: "{{ inputs.max_pages }}"
+      MAX_PAGES: "{{ inputs.max_pages is empty ? null : inputs.max_pages }}"
       RAWG_API_KEY: "{{ envs.rawg_api_key }}"
       GCS_BUCKET: "{{ envs.gcs_bucket }}"
       GCS_RAW_PREFIX: "{{ envs.gcs_raw_prefix }}"

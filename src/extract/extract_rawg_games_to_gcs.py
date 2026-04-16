@@ -9,6 +9,11 @@ from google.cloud import storage
 
 load_dotenv()
 
+# Environment variables and configuration
+# GCP CREDENTIALS and CONFIG
+API_KEY = os.getenv("RAWG_API_KEY")
+GCS_BUCKET = os.getenv("GCS_BUCKET")
+GCS_RAW_PREFIX = os.getenv("GCS_RAW_PREFIX")
 # Parameters for API request
 START_DATE = os.getenv("START_DATE")
 END_DATE = os.getenv("END_DATE")
@@ -16,19 +21,26 @@ PAGE_SIZE = 40
 MAX_PAGES = int(os.getenv("MAX_PAGES", "2"))
 ORDERING = "-added"
 
+
+if not API_KEY:
+    raise ValueError("RAWG_API_KEY not found in environment variables")
+
+if not GCS_BUCKET:
+    raise ValueError("GCS_BUCKET not found in environment variables")
+
+if not GCS_RAW_PREFIX:
+    raise ValueError("GCS_RAW_PREFIX not found in environment variables")
+
 if not START_DATE:
     raise ValueError("START_DATE not found in environment variables")
 
 if not END_DATE:
     raise ValueError("END_DATE not found in environment variables")
 
+
+
 start_year = START_DATE[:4]
 end_year = END_DATE[:4]
-
-if start_year != end_year:
-    raise ValueError(
-        f"START_DATE ({START_DATE}) and END_DATE ({END_DATE}) must belong to the same year"
-    )
 
 YEAR = start_year
 
@@ -36,15 +48,7 @@ YEAR = start_year
 START_DATE_CLEAN = START_DATE.replace("-", "")
 END_DATE_CLEAN = END_DATE.replace("-", "")
 
-API_KEY = os.getenv("RAWG_API_KEY")
-GCS_BUCKET = os.getenv("GCS_BUCKET")
-GCS_RAW_PREFIX = os.getenv("GCS_RAW_PREFIX")
 
-if not API_KEY:
-    raise ValueError("RAWG_API_KEY not found in environment variables")
-
-if not GCS_BUCKET:
-    raise ValueError("GCS_BUCKET not found in environment variables")
 
 url = "https://api.rawg.io/api/games"
 

@@ -4,14 +4,18 @@ import os
 from google.cloud import storage
 
 GCS_BUCKET = os.getenv("GCS_BUCKET")
+GCS_RAW_PREFIX = os.getenv("GCS_RAW_PREFIX")
 
 if not GCS_BUCKET:
     raise ValueError("GCS_BUCKET not found in environment variables")
 
+if not GCS_RAW_PREFIX:
+    raise ValueError("GCS_RAW_PREFIX not found in environment variables")
+
 def read_rawg_games_gcs(year: int | str) -> list[dict]:
     client = storage.Client()
     bucket = client.bucket(GCS_BUCKET)
-    prefix = f"raw/year={year}/"
+    prefix = f"{GCS_RAW_PREFIX}/year={year}/"
 
     blobs = sorted(bucket.list_blobs(prefix=prefix), key=lambda blob: blob.name)
 

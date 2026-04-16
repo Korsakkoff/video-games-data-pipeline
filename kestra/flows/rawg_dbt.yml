@@ -1,0 +1,30 @@
+id: rawg_dbt
+namespace: video_games
+
+tasks:
+  - id: dbt_build
+    type: io.kestra.plugin.dbt.cli.DbtCLI
+    containerImage: ghcr.io/kestra-io/dbt-bigquery:latest
+    namespaceFiles:
+      enabled: true
+    taskRunner:
+      type: io.kestra.plugin.scripts.runner.docker.Docker
+      volumes:
+        - /home/didac/VSCode/video-games-data-pipeline/credentials:/app/credentials
+    projectDir: dbt/rawg_dbt
+    commands:
+      - dbt build --target prod --no-partial-parse
+    profiles: |
+      rawg_dbt:
+        target: prod
+        outputs:
+          prod:
+            type: bigquery
+            method: service-account
+            project: {{ envs.gcp_project_id }}
+            dataset: rawg
+            threads: 4
+            keyfile: /app/credentials/video-games-rawg-data-gcp-key.json
+            location: {{ envs.bq_location }}
+            priority: interactive
+            timeout_seconds: 300

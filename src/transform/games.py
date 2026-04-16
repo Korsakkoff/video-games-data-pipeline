@@ -19,6 +19,8 @@ def build_games_df(raw_games: list[dict]) -> pd.DataFrame:
 
     games_df = pd.DataFrame(games_data)
 
+    games_df["metacritic"] = games_df["metacritic"].astype("Int64")
+
     if games_df.empty:
         raise ValueError("games_df is empty after transformation")
 

@@ -1,4 +1,4 @@
-id: rawg_build_processed_tables
+id: rawg_load
 namespace: video_games
 
 inputs:
@@ -6,7 +6,7 @@ inputs:
     type: INT
 
 tasks:
-  - id: process
+  - id: load
     type: io.kestra.plugin.scripts.shell.Commands
     containerImage: rawg-pipeline:latest
     taskRunner:
@@ -16,10 +16,11 @@ tasks:
         - /home/didac/VSCode/video-games-data-pipeline/credentials:/app/credentials
     env: 
       YEAR: "{{ inputs.year }}"
-      RAWG_API_KEY: "{{ envs.rawg_api_key }}" 
-      GCS_BUCKET: "{{ envs.gcs_bucket }}" 
-      GCS_RAW_PREFIX: "{{ envs.gcs_raw_prefix }}" 
+      GCS_BUCKET: "{{ envs.gcs_bucket }}"
+      GCP_PROJECT_ID: "{{ envs.gcp_project_id }}"
+      BQ_DATASET_RAW_PREFIX: "{{ envs.bq_dataset_raw_prefix }}"
+      BQ_LOCATION: "{{ envs.bq_location }}"
       GOOGLE_APPLICATION_CREDENTIALS: "{{ envs.google_application_credentials }}"
     commands: 
       - cd /app/project 
-      - python -m src.process.process_rawg_to_parquet_gcs
+      - python -m src.load.load_rawg_to_bigquery

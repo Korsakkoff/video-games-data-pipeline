@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-from src.extract.read_rawg_games_gcs import read_rawg_games_gcs
+from src.extract.read_rawg_games_from_gcs import read_rawg_games_gcs
 
 from src.transform.games import build_games_df
 from src.transform.genres import build_genres_df
@@ -12,6 +12,7 @@ from src.transform.game_platform import build_game_platform_df
 
 YEAR = os.getenv("YEAR")
 GCS_BUCKET = os.getenv("GCS_BUCKET")
+GCS_PROCESSED_PREFIX = os.getenv("GCS_PROCESSED_PREFIX")
 
 
 def validate_not_empty(df: pd.DataFrame, name: str) -> None:
@@ -32,6 +33,9 @@ def main() -> None:
     
     if not GCS_BUCKET:
         raise ValueError("GCS_BUCKET not found in environment variables")
+    
+    if not GCS_PROCESSED_PREFIX:
+        raise ValueError("GCS_PROCESSED_PREFIX not found in environment variables")
 
     raw_games = read_rawg_games_gcs(YEAR)
 
@@ -58,7 +62,11 @@ def main() -> None:
     validate_unique(game_genre_df, ["game_id", "genre_id"], "game_genre")
     validate_unique(game_platform_df, ["game_id", "platform_id"], "game_platform")
 
-    base_path = f"gs://{GCS_BUCKET}/processed/year={YEAR}"
+    base_path = f"gs://{GCS_BUCKET}/{GCS_PROCESSED_PREFIX}/year={YEAR}"
+    
+    games_df["year"] = int(YEAR)
+    game_genre_df["year"] = int(YEAR)
+    game_platform_df["year"] = int(YEAR)
 
     games_df.to_parquet(f"{base_path}/games.parquet", index=False)
     genres_df.to_parquet(f"{base_path}/genres.parquet", index=False)

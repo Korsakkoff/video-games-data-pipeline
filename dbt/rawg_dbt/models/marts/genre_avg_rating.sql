@@ -1,3 +1,8 @@
+{{ config(
+    materialized='table',
+    cluster_by=["genre_name"]
+) }}
+
 select
     g.genre_name,
     count(distinct gg.game_id) as games_count,
@@ -9,4 +14,3 @@ join {{ ref('stg_games') }} sg
     on gg.game_id = sg.game_id
 where sg.rating is not null
 group by 1
-order by avg_rating desc, games_count desc

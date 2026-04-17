@@ -1,7 +1,3 @@
-# Video Games Data Pipeline
-
-End-to-end data pipeline that ingests video game data from the RAWG API, stores the raw payloads in Google Cloud Storage, transforms them into analytical tables, loads them into BigQuery, and builds reporting-ready marts with dbt.
-
 ## Architecture Overview
 
 This repository is organized around four main stages:

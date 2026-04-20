@@ -91,7 +91,6 @@ Key insights from the dashboard:
 - Indie and Casual genres dominate the catalog across platforms
 - PC has the highest number of games across all genres
 
-[View the dashboard in Data Studio](https://datastudio.google.com/reporting/481338fd-5553-41f8-92a9-25bf38ff84ef/page/yABvF)
 
 ![Dashboard overview](docs/images/dashboard-overview.jpg)
 
